@@ -20,15 +20,17 @@ const AddTodoModal = () => {
   const [description, setDescription] = useState("");
 
   const dispatch = useAppDispatch();
+  const randomString = Math.random().toString(32).substring(2, 7);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     const taskDetails = {
+      id: randomString,
       title: task,
       description: description,
     };
+
     dispatch(addTodo(taskDetails));
-    console.log({ task, description });
   };
   return (
     <Dialog>
