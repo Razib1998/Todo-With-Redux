@@ -6,7 +6,7 @@ import TodoDropdown from "./TodoDropdown";
 const TodoContainer = () => {
   // const { todos } = useAppSelector((state) => state.todos);
 
-  const { data: todos, isLoading, isError } = useGetTodosQuery(undefined);
+  const { data: todos, isLoading } = useGetTodosQuery(undefined);
   if (isLoading) {
     return <p>Loading...</p>;
   }
