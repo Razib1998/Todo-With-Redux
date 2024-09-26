@@ -1,24 +1,58 @@
+import {
+  useDeleteTodoMutation,
+  useRemoveTodoMutation,
+  useUpdateTodoMutation,
+} from "../../redux/api/api";
 import { removeTodo, toggleComplete } from "../../redux/features/todoSlice";
 import { useAppDispatch } from "../../redux/hooks";
 
-type TItem = {
-  id: string;
+export type TItem = {
+  _id: string;
   title: string;
   description: string;
   isCompleted?: boolean;
   priority: string;
 };
 
-const TodoCard = ({ title, description, id, isCompleted, priority }: TItem) => {
-  const dispatch = useAppDispatch();
+const TodoCard = ({
+  title,
+  description,
+  _id,
+  isCompleted,
+  priority,
+}: TItem) => {
+  // const dispatch = useAppDispatch();
+
+  const [updateTodo] = useUpdateTodoMutation();
+  const [removeTodo, { isLoading }] = useDeleteTodoMutation();
 
   const toggleState = () => {
-    dispatch(toggleComplete(id));
+    // dispatch(toggleComplete(_id));
+
+    const options = {
+      id: _id,
+      data: {
+        title: title,
+        description: description,
+        priority: priority,
+        isCompleted: !isCompleted,
+      },
+    };
+    updateTodo(options);
+  };
+
+  const handleDelete = () => {
+    removeTodo(_id);
   };
   return (
     <div>
       <div className="flex justify-between items-center bg-white p-3 rounded-lg">
-        <input className="mr-3" onChange={toggleState} type="checkbox" />
+        <input
+          className="mr-3"
+          onChange={toggleState}
+          defaultChecked={isCompleted}
+          type="checkbox"
+        />
         <p className="font-semibold flex-1">{title}</p>
         <div className="flex-1 flex gap-3 items-center">
           <div
@@ -41,7 +75,8 @@ const TodoCard = ({ title, description, id, isCompleted, priority }: TItem) => {
         <p className="flex-[2]">{description}</p>
         <div className="space-x-5">
           <button
-            onClick={() => dispatch(removeTodo(id))}
+            onClick={() => handleDelete()}
+            disabled={isLoading}
             className="bg-red-500 p-1 rounded-md"
           >
             <svg
